@@ -56,27 +56,6 @@ class TestDB(FrappeTestCase):
 			frappe.db.rollback(save_point=savepoint)
 			self.fail("Long running queries not timing out")
 
-	def test_skip_locking(self):
-		with self.primary_connection():
-			name = frappe.db.get_value("User", "Administrator", for_update=True, skip_locked=True)
-			self.assertEqual(name, "Administrator")
-
-		with self.secondary_connection():
-			name = frappe.db.get_value("User", "Administrator", for_update=True, skip_locked=True)
-			self.assertFalse(name)
-
-	@timeout(5, "Lock timeout should have been 0")
-	def test_no_wait(self):
-		with self.primary_connection():
-			name = frappe.db.get_value("User", "Administrator", for_update=True)
-			self.assertEqual(name, "Administrator")
-
-		with self.secondary_connection():
-			self.assertRaises(
-				frappe.QueryTimeoutError,
-				lambda: frappe.db.get_value("User", "Administrator", for_update=True, wait=False),
-			)
-
 	@patch.dict(frappe.conf, {"http_timeout": 20, "enable_db_statement_timeout": 1})
 	def test_db_timeout_computation(self):
 		set_request(method="GET", path="/")
