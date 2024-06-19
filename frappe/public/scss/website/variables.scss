@@ -9,7 +9,7 @@ $text-muted: $gray-600 !default;
 $border-color: $gray-300 !default;
 $headings-color: $gray-900 !default;
 $breadcrumb-bg: transparent !default;
-$navbar-bg: white !default;
+$navbar-bg: var(--bg-color) !default;
 $navbar-height: 48px;
 
 $container-max-widths: (

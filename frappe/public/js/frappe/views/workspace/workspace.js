@@ -163,7 +163,7 @@ frappe.views.Workspace = class Workspace {
 		);
 
 		let $title = $(`<button class="btn-reset standard-sidebar-label">
-			<span>${frappe.utils.icon("es-line-down", "xs")}</span>
+			<span class="icon-clr">${frappe.utils.icon("es-line-down", "xs")}</span>
 			<span class="section-title">${__(title)}<span>
 		</div>`).appendTo(sidebar_section);
 		$title.attr({

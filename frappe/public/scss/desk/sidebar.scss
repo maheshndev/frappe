@@ -2,6 +2,7 @@
 .underline-hover {
 	display: initial;
 }
+
 .hide-form-sidebar {
 	.form-sidebar {
 		display: none !important;
@@ -41,12 +42,18 @@ body[data-route^="Module"] .main-menu {
 	.data-pill {
 		width: 100%;
 		justify-content: unset;
+
 		.es-icon {
 			margin: 0px 6px;
+			stroke: var(--text-sidebar-color);
+
 		}
+		
 	}
+
 	&.user-actions {
 		margin-bottom: 15px;
+
 		a {
 			font-weight: bold;
 		}
@@ -58,7 +65,7 @@ body[data-route^="Module"] .main-menu {
 		margin-bottom: 7px;
 	}
 
-	> li {
+	>li {
 		position: relative;
 	}
 }
@@ -75,16 +82,27 @@ body[data-route^="Module"] .main-menu {
 			justify-content: space-between;
 			flex-wrap: wrap;
 			padding-bottom: var(--padding-sm);
+			color: var(--text-sidebar-color);
+
+             .ellipsis{
+				color:var(--text-sidebar-color);
+			 }
 
 			.icon-btn {
 				height: unset;
+				stroke: var(--text-sidebar-color);
+			}
+			svg>use{
+				stroke: var(--text-sidebar-color);
 			}
 		}
+
 	}
 
 	.form-tags {
 		.form-tag-row:not(:last-child) {
 			margin-bottom: var(--margin-sm);
+			color: var(--text-sidebar-color);
 		}
 
 		.tag-area {
@@ -116,10 +134,16 @@ body[data-route^="Module"] .main-menu {
 			.form-follow {
 				text-transform: uppercase;
 				font-size: var(--text-xs, 11px);
+				color: var(--text-sidebar-color);
 			}
-
+           svg>use{
+			stroke: var(--text-sidebar-color);
+		   }
+		   .ml-2{
+			color:var(--text-sidebar-color);
+		   }
 			use.comment-icon {
-				fill: var(--gray-500);
+				fill: var(--text-sidebar-color);
 			}
 		}
 	}
@@ -152,14 +176,17 @@ body[data-route^="Module"] .main-menu {
 		}
 
 		.sidebar-image-wrapper:hover {
+
 			.sidebar-image,
 			.sidebar-standard-image {
 				opacity: 0.5;
 			}
+
 			.sidebar-image-actions {
 				display: block;
 			}
 		}
+
 		.sidebar-image-actions {
 			display: none;
 			position: absolute;
@@ -170,6 +197,7 @@ body[data-route^="Module"] .main-menu {
 			text-align: center;
 			z-index: 1;
 		}
+
 		// TODO: find better fix
 		.sidebar-standard-image {
 			.standard-image {
@@ -183,17 +211,19 @@ body[data-route^="Module"] .main-menu {
 .layout-side-section {
 	@include get_textstyle("sm", "regular");
 	padding-right: 30px;
+	background-color: var(--bg-sidebar);
 
 	&.hide-sidebar {
 		display: none;
 	}
 
-	> .divider {
+	>.divider {
 		display: none !important;
 	}
 
-	.sidebar-menu > li > a {
+	.sidebar-menu>li>a {
 		display: inline-block;
+
 		&:hover,
 		&:focus,
 		&:active {
@@ -207,24 +237,28 @@ body[data-route^="Module"] .main-menu {
 		margin-bottom: var(--margin-sm);
 		display: flex;
 		align-items: center;
-		color: var(--text-muted);
+		color: var(--text-sidebar-color);
+
 		.icon {
 			margin: 0;
 			margin-right: var(--margin-xs);
-			--icon-stroke: var(--text-muted);
+			--icon-stroke: var(--text-sidebar-color);
 		}
 	}
 
 	.form-sidebar {
+
 		.modified-by,
 		.created-by,
 		.pageview-count {
 			@include get_textstyle("sm", "regular");
+			color: var(--text-sidebar-color);
 		}
 
 		.modified-by,
 		.pageview-count {
 			margin-bottom: var(--margin-md);
+			color: var(--text-sidebar-color);
 		}
 	}
 
@@ -274,6 +308,7 @@ body[data-route^="Module"] .main-menu {
 
 	.module-sidebar-nav {
 		margin-top: 15px;
+
 		@media (max-width: 991px) {
 			padding-left: 0;
 			padding-right: 0;
@@ -337,17 +372,21 @@ body[data-route^="Module"] .main-menu {
 			display: flex;
 			justify-content: space-between;
 			position: relative;
+
 			&:hover {
 				text-decoration: none;
 			}
+
 			.applied {
 				position: absolute;
 				left: 10px;
+
 				.icon use {
 					stroke-width: 2;
 				}
 			}
 		}
+
 		.empty-state {
 			padding: 10px 15px;
 			text-align: center;
@@ -372,8 +411,21 @@ body[data-route^="Module"] .main-menu {
 
 	.sidebar-action {
 		@include get_textstyle("sm", "regular");
-		color: var(--primary);
+		color: var(--text-sidebar-color);
 		margin-top: 10px;
+
+		.add-group-by {
+			color: var(--text-sidebar-color);
+		}
+
+		.list-tag-preview {
+			color: var(--text-sidebar-color);
+		}
+
+		.ellipsis {
+			color: var(--text-sidebar-color);
+		}
+
 	}
 
 	.list-filters {
@@ -405,6 +457,7 @@ body[data-route^="Module"] .main-menu {
 .form-tag-row {
 	margin-bottom: 3px;
 	max-width: 100%;
+
 	.data-pill {
 		@include get_textstyle("sm", "regular");
 		justify-content: space-between;
@@ -412,6 +465,7 @@ body[data-route^="Module"] .main-menu {
 		line-height: 1;
 	}
 }
+
 .attachment-row {
 	.data-pill {
 		background-color: unset;
@@ -422,9 +476,11 @@ body[data-route^="Module"] .main-menu {
 
 .form-tag-row {
 	margin-right: var(--margin-xs);
+
 	.data-pill {
 		background-color: var(--subtle-fg);
 	}
+
 	display: inline-flex;
 }
 
@@ -446,16 +502,20 @@ body[data-route^="Module"] .main-menu {
 	margin-bottom: var(--margin-sm);
 	color: var(--text-light);
 }
+
 .form-assignments {
 	margin-top: 12px;
 }
+
 .form-assignments,
 .form-shared {
+
 	.assignments,
 	.shares {
 		margin: var(--margin-xs) 0px;
 	}
 }
+
 .add-assignment-btn,
 .add-attachment-btn,
 .add-review-btn,
@@ -470,9 +530,12 @@ body[data-route^="Module"] .main-menu {
 	margin-right: 0;
 	padding: var(--padding-xs) !important;
 	border-radius: var(--border-radius-full);
+	color: var(--text-sidebar-color);
+
 	&:hover {
 		background-color: var(--subtle-fg);
 	}
+
 	&:focus {
 		box-shadow: none;
 	}
@@ -483,6 +546,7 @@ body[data-route^="Module"] .main-menu {
 		display: flex;
 		flex-wrap: wrap;
 	}
+
 	.review {
 		display: flex;
 		font-weight: 500;
@@ -496,10 +560,12 @@ body[data-route^="Module"] .main-menu {
 		align-items: center;
 		min-width: 60px;
 		background: var(--fg-color);
+
 		.avatar {
 			width: 20px;
 			height: 20px;
 		}
+
 		.review-points {
 			margin-left: 3px;
 			flex: 1;
@@ -517,6 +583,7 @@ body[data-route^="Module"] .main-menu {
 	.popover-content {
 		padding: 0;
 	}
+
 	.body {
 		border-bottom: 1px solid $border-color;
 	}
@@ -525,6 +592,7 @@ body[data-route^="Module"] .main-menu {
 	.body {
 		padding: var(--padding-sm);
 		overflow-wrap: break-word;
+
 		p {
 			margin-top: var(--margin-xs);
 			margin-bottom: 0px;
@@ -543,6 +611,7 @@ body[data-route^="Module"] .main-menu {
 			li {
 				padding: var(--padding-xs) var(--padding-sm);
 				margin: 2px;
+				color: var(--text-sidebar-color);
 
 				&:hover {
 					background-color: var(--fg-hover-color);
