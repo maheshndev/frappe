@@ -67,8 +67,10 @@ $disabled-input-height: 22px;
 	
 	//custom variables
 	--text-sidebar-color:#fff;
-	--bg-card-ctm:linear-gradient(145deg, #fed19e  0%, #fff  100%);
+	// --bg-card-ctm:linear-gradient(145deg, #fed19e  0%, #fff  100%);
+	--bg-card-ctm:#dbefff;
     --bg-sidebar:#132e48;
+	--border-color-ctm:#132e48;
 
 	// alert colors
 	--alert-text-danger: var(--red-600);
