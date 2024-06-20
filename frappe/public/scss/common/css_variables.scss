@@ -67,8 +67,10 @@ $disabled-input-height: 22px;
 	
 	//custom variables
 	--text-sidebar-color:#fff;
-	// --bg-card-ctm:linear-gradient(145deg, #fed19e  0%, #fff  100%);
+	// --bg-card-ctm:linear-gradient(140deg, #8fc8fe  20%, #cbe5fc  100%);
 	--bg-card-ctm:#dbefff;
+	// --bg-card-ctm:#fde0ff;
+	// --bg-card-ctm:#ceffde;
     --bg-sidebar:#132e48;
 	--border-color-ctm:#132e48;
 
@@ -104,7 +106,7 @@ $disabled-input-height: 22px;
 	// Button Colors
 	--btn-primary: var(--gray-900);
 	--btn-default-bg: var(--gray-100);
-	--btn-default-hover-bg: var(--gray-300);
+	--btn-default-hover-bg: var(--gray-400);
 
 	// Border Colors
 	--border-primary: var(--gray-900);
