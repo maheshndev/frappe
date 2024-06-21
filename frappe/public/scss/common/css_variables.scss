@@ -30,6 +30,7 @@ $disabled-input-height: 22px;
 	--icon-fill: transparent;
 	--icon-fill-bg: var(--fg-color);
 	--icon-stroke: var(--gray-800);
+	--icon-stroke-ctm:var(--text-sidebar-color);
 
 	// Background Text Color Pairs
 	--bg-blue: var(--blue-100);
@@ -63,6 +64,15 @@ $disabled-input-height: 22px;
 	--text-on-purple: var(--purple-700);
 	--text-on-pink: var(--pink-700);
 	--text-on-cyan: var(--cyan-700);
+	
+	//custom variables
+	--text-sidebar-color:#fff;
+	// --bg-card-ctm:linear-gradient(140deg, #8fc8fe  20%, #cbe5fc  100%);
+	--bg-card-ctm:#dbefff;
+	// --bg-card-ctm:#fde0ff;
+	// --bg-card-ctm:#ceffde;
+    --bg-sidebar:#132e48;
+	--border-color-ctm:#132e48;
 
 	// alert colors
 	--alert-text-danger: var(--red-600);
@@ -96,7 +106,7 @@ $disabled-input-height: 22px;
 	// Button Colors
 	--btn-primary: var(--gray-900);
 	--btn-default-bg: var(--gray-100);
-	--btn-default-hover-bg: var(--gray-300);
+	--btn-default-hover-bg: var(--gray-400);
 
 	// Border Colors
 	--border-primary: var(--gray-900);
@@ -151,8 +161,8 @@ $disabled-input-height: 22px;
 	--diff-added: var(--green-100);
 	--diff-removed: var(--red-100);
 
-	--right-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1.25 7.5L4.75 4L1.25 0.5' stroke='%231F272E' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-	--left-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M7.5 9.5L4 6l3.5-3.5' stroke='%231F272E' stroke-linecap='round' stroke-linejoin='round'></path></svg>");
+	--right-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1.25 7.5L4.75 4L1.25 0.5' stroke='var(--text-sidebar-color)' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+	--left-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M7.5 9.5L4 6l3.5-3.5' stroke='var(--text-sidebar-color)' stroke-linecap='round' stroke-linejoin='round'></path></svg>");
 
 	@include media-breakpoint-down(md) {
 		--checkbox-size: 18px;

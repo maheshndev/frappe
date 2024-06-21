@@ -5,7 +5,7 @@
 		display: flex;
 		margin-right: var(--margin-sm);
 		cursor: pointer;
-		--icon-stroke: var(--gray-700);
+		--icon-stroke: var(--text-sidebar-color);
 		.sidebar-toggle-icon {
 			display: none;
 		}
@@ -33,6 +33,7 @@
 			margin-bottom: 0px;
 			margin-right: var(--margin-sm);
 			max-width: 25vw;
+			color:var(--text-sidebar-color);
 		}
 		.indicator-pill {
 			margin-top: 2px;
@@ -99,7 +100,7 @@
 	z-index: 6;
 	position: sticky;
 	top: var(--navbar-height);
-	background: var(--bg-color);
+	background: var(--bg-sidebar);
 	margin-bottom: 5px;
 	transition: 0.5s top;
 	.page-head-content {

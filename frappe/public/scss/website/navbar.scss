@@ -22,6 +22,7 @@
 @media (max-width: map-get($grid-breakpoints, "lg")) {
 	.navbar {
 		padding: 0 1rem;
+		background: var(--bg-sidebar);
 
 		.navbar-search {
 			width: 75vw;
@@ -79,7 +80,7 @@
 	}
 
 	svg use {
-		--icon-stroke: white;
+		--icon-stroke: var(--text-sidebar-color);
 	}
 }
 

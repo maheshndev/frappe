@@ -464,6 +464,7 @@ kbd {
 		margin-bottom: var(--margin-md);
 		margin-top: var(--margin-sm);
 		width: 100%;
+		stroke:var(--text-sidebar-color);
 
 		&:focus-visible {
 			text-decoration: underline;
@@ -485,6 +486,7 @@ kbd {
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
+			color:var(--text-sidebar-color);
 		}
 
 		&:focus-within {
@@ -494,12 +496,12 @@ kbd {
 		}
 
 		&:hover {
-			background-color: var(--sidebar-select-color);
+			background-color: var(--blue-600);
 			text-decoration: none;
 		}
 
 		&.selected {
-			background-color: var(--sidebar-select-color);
+			background-color: var(--blue-600);
 		}
 
 		> a {
@@ -509,11 +511,14 @@ kbd {
 			&:focus-visible {
 				text-decoration: underline;
 			}
+			
 		}
-
+		
 		svg {
 			margin-right: var(--margin-sm);
+			
 		}
+		
 	}
 }
 
@@ -613,6 +618,7 @@ details > summary:focus {
 	text-overflow: ellipsis;
 	max-width: 100%;
 	vertical-align: middle;
+	
 }
 
 .ellipsis-width {

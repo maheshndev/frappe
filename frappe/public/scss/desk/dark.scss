@@ -81,6 +81,15 @@ $check-icon-dark: url("data:image/svg+xml, <svg viewBox='0 0 8 7' fill='none' xm
 	--text-on-pink: var(--pink-100);
 	--text-on-cyan: var(--cyan-100);
 
+	//custom variables
+	//custom variables
+	--text-sidebar-color:#fff;
+	// --bg-card-ctm:linear-gradient(145deg, #fed19e1a  0%, #ffffff0a  100%);
+	// --bg-card-ctm:#1b252d;
+	// --bg-card-ctm:
+	--bg-sidebar:#00000000;
+	--icon-stroke-ctm:#00000000;
+
 	// alert colors
 	--alert-text-danger: var(--red-300);
 	--alert-text-warning: var(--yellow-300);

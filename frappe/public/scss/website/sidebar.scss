@@ -34,6 +34,11 @@
 	width: 24px;
 	height: 24px;
 	display: inline-block;
+	svg>use{
+		stroke: var(--text-sidebar-color);
+		fill:var(--text-sidebar-color);
+	}
+	
 }
 
 .sidebar-group {
