@@ -27,6 +27,7 @@ app_include_js = [
 	"controls.bundle.js",
 	"report.bundle.js",
 	"telemetry.bundle.js",
+	"billing.bundle.js",
 ]
 
 app_include_css = [
@@ -58,6 +59,7 @@ website_route_rules = [
 	{"from_route": "/newsletters", "to_route": "Newsletter"},
 	{"from_route": "/profile", "to_route": "me"},
 	{"from_route": "/app/<path:app_path>", "to_route": "app"},
+	{"from_route": "/billing/<path:app_path>", "to_route": "billing"},
 ]
 
 website_redirects = [
@@ -157,6 +159,7 @@ doc_events = {
 			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
 			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
 			"frappe.core.doctype.user_type.user_type.apply_permissions_for_non_standard_user_type",
+			"frappe.core.doctype.permission_log.permission_log.make_perm_log",
 		],
 		"after_rename": "frappe.desk.notifications.clear_doctype_notifications",
 		"on_cancel": [
@@ -178,6 +181,7 @@ doc_events = {
 			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points",
 			"frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone",
 		],
+		"after_delete": ["frappe.core.doctype.permission_log.permission_log.make_perm_log"],
 	},
 	"Event": {
 		"after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",
@@ -189,10 +193,10 @@ doc_events = {
 		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts",
 	},
 	"DocType": {
-		"on_update": "frappe.cache_manager.build_domain_restriced_doctype_cache",
+		"on_update": "frappe.cache_manager.build_domain_restricted_doctype_cache",
 	},
 	"Page": {
-		"on_update": "frappe.cache_manager.build_domain_restriced_page_cache",
+		"on_update": "frappe.cache_manager.build_domain_restricted_page_cache",
 	},
 }
 
@@ -210,6 +214,7 @@ scheduler_events = {
 			"frappe.email.doctype.email_account.email_account.notify_unreplied",
 			"frappe.utils.global_search.sync_global_search",
 			"frappe.deferred_insert.save_to_db",
+			"frappe.automation.doctype.reminder.reminder.send_reminders",
 		],
 		# 10 minutes
 		"0/10 * * * *": [
@@ -227,7 +232,6 @@ scheduler_events = {
 	"all": [
 		"frappe.email.queue.flush",
 		"frappe.monitor.flush",
-		"frappe.automation.doctype.reminder.reminder.send_reminders",
 	],
 	"hourly": [
 		"frappe.model.utils.link_count.update_link_count",
@@ -422,6 +426,7 @@ ignore_links_on_delete = [
 	"Workspace",
 	"Route History",
 	"Access Log",
+	"Permission Log",
 ]
 
 # Request Hooks
@@ -442,7 +447,9 @@ before_job = [
 ]
 
 if os.getenv("FRAPPE_SENTRY_DSN") and (
-	os.getenv("ENABLE_SENTRY_DB_MONITORING") or os.getenv("SENTRY_TRACING_SAMPLE_RATE")
+	os.getenv("ENABLE_SENTRY_DB_MONITORING")
+	or os.getenv("SENTRY_TRACING_SAMPLE_RATE")
+	or os.getenv("SENTRY_PROFILING_SAMPLE_RATE")
 ):
 	before_request.append("frappe.utils.sentry.set_sentry_context")
 	before_job.append("frappe.utils.sentry.set_sentry_context")
@@ -475,6 +482,13 @@ standard_navbar_items = [
 		"item_type": "Action",
 		"action": "frappe.quick_edit('Workspace Settings')",
 		"is_standard": 1,
+	},
+	{
+		"item_label": "Manage Billing",
+		"item_type": "Route",
+		"route": "/billing",
+		"is_standard": 1,
+		"condition": "frappe.boot.fc_communication_secret && frappe.boot.setup_complete && !frappe.is_mobile() && frappe.user.has_role('System Manager')",
 	},
 	{
 		"item_label": "Session Defaults",
@@ -573,4 +587,6 @@ persistent_cache_keys = [
 	"insert_queue_for_*",  # Deferred Insert
 	"recorder-*",  # Recorder
 	"global_search_queue",
+	"monitor-transactions",
+	"rate-limit-counter-*",
 ]

@@ -5,7 +5,7 @@ import requests
 
 import frappe
 from frappe.email.receive import InboundMail
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import get_url
 
 if TYPE_CHECKING:
@@ -32,12 +32,12 @@ YWJjZGVmZ2hpamtsbW5vcF9hdHRhY2htZW50
 """.strip()
 
 
-class TestEmailAttachments(FrappeTestCase):
+class TestEmailAttachments(IntegrationTestCase):
 	def test_email_attachment_percent_encoded(self):
 		email_account = frappe._dict({"email_id": "receive@example.com"})
 		mail = InboundMail(EMAIL_CONTENT, email_account)
 		communication = mail.process()
-		file: "File" = frappe.get_last_doc(
+		file: File = frappe.get_last_doc(
 			"File",
 			{
 				"attached_to_doctype": communication.doctype,
@@ -51,7 +51,7 @@ class TestEmailAttachments(FrappeTestCase):
 	def test_file_with_percent_in_filename(self):
 		def make_and_check_file(index: int, literal_file_name: str, disk_file_name: str):
 			content = "abcdefghijklmnop_attachment"
-			file: "File" = frappe.new_doc("File")  # type: ignore
+			file: File = frappe.new_doc("File")  # type: ignore
 			file.update(
 				{
 					"file_name": literal_file_name,

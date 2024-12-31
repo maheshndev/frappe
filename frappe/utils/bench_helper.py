@@ -1,6 +1,7 @@
+#!/bin/env python3
+
 import importlib
 import json
-import linecache
 import os
 import sys
 import traceback
@@ -35,7 +36,7 @@ def FrappeClickWrapper(cls, handler):
 		def make_context(self, info_name, args, parent=None, **extra):
 			try:
 				return super().make_context(info_name, args, parent=parent, **extra)
-			except click.ClickException as e:
+			except (click.ClickException, click.exceptions.Exit, click.exceptions.Abort) as e:
 				raise e
 			except Exception as exc:
 				# call the handler
@@ -45,7 +46,7 @@ def FrappeClickWrapper(cls, handler):
 		def invoke(self, ctx):
 			try:
 				return super().invoke(ctx)
-			except click.ClickException as e:
+			except (click.ClickException, click.exceptions.Exit, click.exceptions.Abort) as e:
 				raise e
 			except Exception as exc:
 				# call the handler
@@ -65,39 +66,9 @@ class CliCtxObj:
 
 
 def handle_exception(cmd, info_name, exc):
-	tb = sys.exc_info()[2]
-	while tb.tb_next:
-		tb = tb.tb_next
-	frame = tb.tb_frame
-	filename = frame.f_code.co_filename
-	lineno = frame.f_lineno
+	click.echo(traceback.format_exc())
 
-	(
-		click.secho("\n:: ", nl=False),
-		click.secho(f"{exc}", fg="red", bold=True, nl=False),
-		click.secho(" ::"),
-	)
-	click.secho("\nContext:", fg="yellow", bold=True)
-	click.secho(f" File '{filename}', line {lineno}\n")
-	context_lines = 5
-	start = max(1, lineno - context_lines)
-	end = lineno + context_lines + 1
-
-	for i in range(start, end):
-		line = linecache.getline(filename, i).rstrip()
-		if i == lineno:
-			click.secho(f"{i:4d}> {line}", fg="red")
-		else:
-			click.echo(f"{i:4d}: {line}")
-
-	show_exception = (not sys.stdout.isatty()) or click.confirm(
-		"\nDo you want to see the full traceback?", default=False
-	)
-	if show_exception:
-		click.secho("\nFull traceback:", fg="red")
-		click.echo(traceback.format_exc())
-
-		click.echo(exc)
+	click.echo(exc)
 
 
 def main():
@@ -106,7 +77,7 @@ def main():
 	FrappeClickWrapper(click.Group, handle_exception)(commands=commands)(prog_name="bench")
 
 
-def get_app_groups() -> dict[str, click.Group]:
+def get_app_groups() -> dict[str, click.Group | click.Command]:
 	"""Get all app groups, put them in main group "frappe" since bench is
 	designed to only handle that"""
 	commands = {}
@@ -143,8 +114,8 @@ def get_sites(site_arg: str) -> list[str]:
 		return frappe.utils.get_sites()
 	elif site_arg:
 		return [site_arg]
-	elif os.environ.get("FRAPPE_SITE"):
-		return [os.environ.get("FRAPPE_SITE")]
+	elif env_site := os.environ.get("FRAPPE_SITE"):
+		return [env_site]
 	elif default_site := frappe.get_conf().default_site:
 		return [default_site]
 	# This is not supported, just added here for warning.

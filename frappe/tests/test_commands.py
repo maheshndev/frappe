@@ -33,8 +33,8 @@ import frappe.commands.utils
 import frappe.recorder
 from frappe.installer import add_to_installed_apps, remove_app
 from frappe.query_builder.utils import db_type_is
+from frappe.tests import IntegrationTestCase, timeout
 from frappe.tests.test_query_builder import run_only_if
-from frappe.tests.utils import FrappeTestCase, timeout
 from frappe.utils import add_to_date, get_bench_path, get_bench_relative_path, now
 from frappe.utils.backups import BackupGenerator, fetch_latest_backups
 from frappe.utils.jinja_globals import bundled_asset
@@ -133,7 +133,7 @@ def cli(cmd: Command, args: list | None = None):
 			importlib.invalidate_caches()
 
 
-class BaseTestCommands(FrappeTestCase):
+class BaseTestCommands(IntegrationTestCase):
 	@classmethod
 	def setUpClass(cls) -> None:
 		super().setUpClass()
@@ -248,7 +248,7 @@ class TestCommands(BaseTestCommands):
 		global_config = {
 			"admin_password": frappe.conf.admin_password,
 			"root_login": frappe.conf.root_login,
-			"root_password": frappe.conf.root_password,
+			"root_password": frappe.conf.mariadb_root_password or frappe.conf.root_password,
 			"db_type": frappe.conf.db_type,
 		}
 		site_data = {"test_site": TEST_SITE, **global_config}
@@ -454,7 +454,7 @@ class TestCommands(BaseTestCommands):
 
 		# Reset it back to original password
 		original_password = frappe.conf.admin_password or "admin"
-		self.execute("bench --site {site} set-admin-password %s" % original_password)
+		self.execute("bench --site {{site}} set-admin-password {}".format(original_password))
 		self.assertEqual(self.returncode, 0)
 		self.assertEqual(check_password("Administrator", original_password), "Administrator")
 
@@ -519,7 +519,8 @@ class TestCommands(BaseTestCommands):
 
 	def test_set_global_conf(self):
 		key = "answer"
-		value = "42"
+		value = frappe.generate_hash()
+		_ = frappe.get_site_config()
 		self.execute(f"bench set-config {key} {value} -g")
 		conf = frappe.get_site_config()
 
@@ -637,6 +638,7 @@ class TestBackups(BaseTestCommands):
 				except OSError:
 					pass
 
+	@run_only_if(db_type_is.MARIADB)
 	def test_backup_no_options(self):
 		"""Take a backup without any options"""
 		before_backup = fetch_latest_backups(partial=True)
@@ -825,7 +827,7 @@ class TestBackups(BaseTestCommands):
 		self.assertEqual([], missing_in_backup(self.backup_map["excludes"]["excludes"], database))
 
 
-class TestRemoveApp(FrappeTestCase):
+class TestRemoveApp(IntegrationTestCase):
 	def test_delete_modules(self):
 		from frappe.installer import (
 			_delete_doctypes,
@@ -944,7 +946,7 @@ class TestSchedulerUtils(BaseTestCommands):
 			self.assertEqual(result.exit_code, 0)
 
 
-class TestCommandUtils(FrappeTestCase):
+class TestCommandUtils(IntegrationTestCase):
 	def test_bench_helper(self):
 		from frappe.utils.bench_helper import get_app_groups
 

@@ -18,6 +18,7 @@ from frappe.model import (
 	table_fields,
 )
 from frappe.model.docstatus import DocStatus
+from frappe.model.dynamic_links import invalidate_distinct_link_doctypes
 from frappe.model.naming import set_new_name
 from frappe.model.utils.link_count import notify_link_count
 from frappe.modules import load_doctype_module
@@ -146,6 +147,9 @@ class BaseDocument:
 		if hasattr(self, "__setup__"):
 			self.__setup__()
 
+	def __json__(self):
+		return self.as_dict(no_nulls=True)
+
 	@cached_property
 	def meta(self):
 		return frappe.get_meta(self.doctype)
@@ -173,6 +177,11 @@ class BaseDocument:
 		state.pop("meta", None)
 		state.pop("permitted_fieldnames", None)
 		state.pop("_parent_doc", None)
+		state.pop("flags", None)
+
+	def __setstate__(self, state):
+		self.__dict__ = state
+		self.flags = _dict()
 
 	def update(self, d):
 		"""Update multiple fields of a doctype using a dictionary of key-value pairs.
@@ -431,6 +440,9 @@ class BaseDocument:
 				else:
 					value = get_not_null_defaults(df.fieldtype)
 
+			if hasattr(value, "__value__"):
+				value = value.__value__()
+
 			d[fieldname] = value
 
 		return d
@@ -490,6 +502,7 @@ class BaseDocument:
 		no_default_fields=False,
 		convert_dates_to_str=False,
 		no_child_table_fields=False,
+		no_private_properties=False,
 	) -> dict:
 		doc = self.get_valid_dict(convert_dates_to_str=convert_dates_to_str, ignore_nulls=no_nulls)
 		doc["doctype"] = self.doctype
@@ -502,6 +515,7 @@ class BaseDocument:
 					no_nulls=no_nulls,
 					no_default_fields=no_default_fields,
 					no_child_table_fields=no_child_table_fields,
+					no_private_properties=no_private_properties,
 				)
 				for d in children
 			]
@@ -516,16 +530,17 @@ class BaseDocument:
 				if key in doc:
 					del doc[key]
 
-		for key in (
-			"_user_tags",
-			"__islocal",
-			"__onload",
-			"_liked_by",
-			"__run_link_triggers",
-			"__unsaved",
-		):
-			if value := getattr(self, key, None):
-				doc[key] = value
+		if not no_private_properties:
+			for key in (
+				"_user_tags",
+				"__islocal",
+				"__onload",
+				"_liked_by",
+				"__run_link_triggers",
+				"__unsaved",
+			):
+				if value := getattr(self, key, None):
+					doc[key] = value
 
 		return doc
 
@@ -740,18 +755,13 @@ class BaseDocument:
 
 		def get_msg(df):
 			if df.fieldtype in table_fields:
-				return "{}: {}: {}".format(
-					_("Error"), _("Data missing in table"), _(df.label, context=df.parent)
-				)
+				return _("Error: Data missing in table {0}").format(_(df.label, context=df.parent))
 
 			# check if parentfield exists (only applicable for child table doctype)
 			elif self.get("parentfield"):
-				return "{}: {} {} #{}: {}: {}".format(
-					_("Error"),
+				return _("Error: {0} Row #{1}: Value missing for: {2}").format(
 					frappe.bold(_(self.doctype)),
-					_("Row"),
 					self.idx,
-					_("Value missing for"),
 					_(df.label, context=df.parent),
 				)
 
@@ -809,6 +819,7 @@ class BaseDocument:
 					doctype = self.get(df.options)
 					if not doctype:
 						frappe.throw(_("{0} must be set first").format(self.meta.get_label(df.options)))
+					invalidate_distinct_link_doctypes(df.parent, df.options, doctype)
 
 				# MySQL is case insensitive. Preserve case of the original docname in the Link Field.
 
@@ -1312,11 +1323,11 @@ class BaseDocument:
 	def cast(self, value, df):
 		return cast_fieldtype(df.fieldtype, value, show_warning=False)
 
-	def _extract_images_from_text_editor(self):
+	def _extract_images_from_editor(self):
 		from frappe.core.doctype.file.utils import extract_images_from_doc
 
 		if self.doctype != "DocType":
-			for df in self.meta.get("fields", {"fieldtype": ("=", "Text Editor")}):
+			for df in self.meta.get("fields", {"fieldtype": ("in", ("Text Editor", "HTML Editor"))}):
 				extract_images_from_doc(self, df.fieldname)
 
 
